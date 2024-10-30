@@ -26,12 +26,12 @@ export const createUser = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ success: false, message: "server error" })
+        return res.status(500).json({ success: false, message: "server error", err: error })
     }
 
 
     if (!req.files || !req.files["aadhar"] || !req.files["passPhoto"] || !req.files["transactionPhoto"]) {
-        return res.json({ success: false, message: "Both PasssPhoto and aadhar is required" })
+        return res.json({ success: false, message: "TransactionPhoto,  PasssPhoto and Aadhar is required" })
     }
 
 
@@ -78,7 +78,7 @@ export const createUser = async (req, res) => {
 
         } catch (error) {
             console.log(error);
-            return res.status(500).json({ success: false, message: "server error" })
+            return res.status(500).json({ success: false, message: "server error", err: error })
         }
 
 
