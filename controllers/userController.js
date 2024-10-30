@@ -17,6 +17,19 @@ export const getAllUsers = async (req, res) => {
 export const createUser = async (req, res) => {
     const { name, mobile, age, position, transactionId } = req.body;
 
+    try {
+        const presentUser = await User.findOne({ mobile });
+
+        if (presentUser) {
+            return res.status(400).json({ success: false, message: "User already registered" })
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "server error" })
+    }
+
+
     if (!req.files || !req.files["aadhar"] || !req.files["passPhoto"] || !req.files["transactionPhoto"]) {
         return res.json({ success: false, message: "Both PasssPhoto and aadhar is required" })
     }
@@ -59,11 +72,6 @@ export const createUser = async (req, res) => {
 
 
         try {
-            const presentUser = await User.findOne({ mobile });
-
-            if (presentUser) {
-                return res.status(400).json({ success: false, message: "User already registered" })
-            }
 
             const user = await User.create({ name, mobile, age, position, passPhoto, aadhar, transactionId, transactionPhoto })
             return res.status(201).json({ success: true, message: "user registered", user })
