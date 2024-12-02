@@ -10,7 +10,12 @@ import cors from "cors"
 const port = process.env.PORT || 7000;
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your frontend's origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    credentials: true,
+}));
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
