@@ -1,6 +1,4 @@
-import mongoose from 'mongoose';
-
-// Define the Match schema
+import mongoose from "mongoose";
 const matchSchema = new mongoose.Schema({
     date: {
         type: Date,
@@ -14,17 +12,16 @@ const matchSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    team1Logo: {
-        type: String,
-        required: false,
+    team1: {
+        name: { type: String, required: true },
+        logo: { type: String, required: false },
     },
-    team2Logo: {
-        type: String,
-        required: false,
+    team2: {
+        name: { type: String, required: true },
+        logo: { type: String, required: false },
     },
 });
 
-// Create the Match model from the schema
 const Match = mongoose.model('Match', matchSchema);
 
 export default Match;

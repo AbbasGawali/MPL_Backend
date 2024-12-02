@@ -1,6 +1,6 @@
 import Match from '../models/Match.js';
 import cloudinary from 'cloudinary';
- 
+import mongoose from 'mongoose';
 // Configure Cloudinary
 cloudinary.v2.config({
     cloud_name: process.env.CLOUDNAME,
@@ -20,18 +20,25 @@ export const getMatches = async (req, res) => {
 
 // Add a new match
 export const addMatch = async (req, res) => {
-    const { date, time, winner } = req.body;
-    const match = new Match({ date, time, winner });
+    const { date, time, winner, team1, team2 } = req.body;
+
+    const match = new Match({
+        date,
+        time,
+        winner,
+        team1: { name: team1.name },
+        team2: { name: team2.name },
+    });
 
     try {
         if (req.files) {
             if (req.files.team1Logo) {
                 const team1LogoResult = await cloudinary.v2.uploader.upload(req.files.team1Logo[0].path);
-                match.team1Logo = team1LogoResult.secure_url;
+                match.team1.logo = team1LogoResult.secure_url;
             }
             if (req.files.team2Logo) {
                 const team2LogoResult = await cloudinary.v2.uploader.upload(req.files.team2Logo[0].path);
-                match.team2Logo = team2LogoResult.secure_url;
+                match.team2.logo = team2LogoResult.secure_url;
             }
         }
 
@@ -45,8 +52,14 @@ export const addMatch = async (req, res) => {
 // Edit a match by ID
 export const editMatch = async (req, res) => {
     const { id } = req.params;
+    const { date, time, winner, team1, team2 } = req.body;
+
     try {
-        const updatedMatch = await Match.findByIdAndUpdate(id, req.body, { new: true });
+        const updatedMatch = await Match.findByIdAndUpdate(
+            id,
+            { date, time, winner, team1, team2 },
+            { new: true }
+        );
         if (updatedMatch) {
             res.json({ message: 'Match edited successfully', match: updatedMatch });
         } else {
