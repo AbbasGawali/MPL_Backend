@@ -25,7 +25,7 @@ router.get("/allUsers", getAllUsers);
 
 router.post("/addUser", upload.fields([
     { name: "passPhoto", maxCount: 1 },
-    { name: "aadhar", maxCount: 1 },
+    // { name: "aadhar", maxCount: 1 },
     { name: "transactionPhoto", maxCount: 1 }
 ]), createUser)
 

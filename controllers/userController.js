@@ -30,14 +30,17 @@ export const createUser = async (req, res) => {
     }
 
 
-    if (!req.files || !req.files["aadhar"] || !req.files["passPhoto"] || !req.files["transactionPhoto"]) {
-        return res.json({ success: false, message: "TransactionPhoto,  PasssPhoto and Aadhar is required" })
+    // if (!req.files || !req.files["aadhar"] || !req.files["passPhoto"] || !req.files["transactionPhoto"]) {
+    //     return res.json({ success: false, message: "TransactionPhoto,  PasssPhoto and Aadhar is required" })
+    // }
+    if (!req.files || !req.files["passPhoto"] || !req.files["transactionPhoto"]) {
+        return res.json({ success: false, message: "TransactionPhoto,  PasssPhoto  is required" })
     }
 
 
     // get passPhoto and aadhar images 
     const passPhoto = req.files["passPhoto"][0].path;
-    const aadhar = req.files["aadhar"][0].path;
+    // const aadhar = req.files["aadhar"][0].path;
     const transactionPhoto = req.files["transactionPhoto"][0].path;
 
     const maxSizeInBytes = 50 * 1024; // 50 KB in bytes
@@ -45,9 +48,9 @@ export const createUser = async (req, res) => {
     if (passPhoto.size > maxSizeInBytes) {
         return res.status(400).json({ success: false, message: "Pass photo must be under 50 KB" });
     }
-    if (aadhar.size > maxSizeInBytes) {
-        return res.status(400).json({ success: false, message: "Aadhar photo must be under 50 KB" });
-    }
+    // if (aadhar.size > maxSizeInBytes) {
+    //     return res.status(400).json({ success: false, message: "Aadhar photo must be under 50 KB" });
+    // }
     if (transactionPhoto.size > maxSizeInBytes) {
         return res.status(400).json({ success: false, message: "Transaction photo must be under 50 KB" });
     }
@@ -73,7 +76,8 @@ export const createUser = async (req, res) => {
 
         try {
 
-            const user = await User.create({ name, mobile, age, position, passPhoto, aadhar, transactionId, transactionPhoto })
+            // const user = await User.create({ name, mobile, age, position, passPhoto, aadhar, transactionId, transactionPhoto })
+            const user = await User.create({ name, mobile, age, position, passPhoto, transactionId, transactionPhoto })
             return res.status(201).json({ success: true, message: "user registered", user })
 
         } catch (error) {

@@ -22,10 +22,12 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-    aadhar: {
-        type: String,
-        required: true,
-    },
+
+    // aadhar: {
+    //     type: String,
+    //     required: true,
+    // },
+
     transactionId: {
         type: String,
         required: true,
