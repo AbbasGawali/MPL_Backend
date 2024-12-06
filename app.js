@@ -11,7 +11,7 @@ const port = process.env.PORT || 7000;
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend's origin
+    origin: ['http://localhost:5173', "https://mpl-cricket.netlify.app/"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     credentials: true,
 }));
