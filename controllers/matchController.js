@@ -17,18 +17,22 @@ export const getMatches = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 // Add a new match
 export const addMatch = async (req, res) => {
-    const { date, time, winner, team1, team2 } = req.body;
+    const { date, time, winner } = req.body;
 
+    // console.log("data from frontend", req.body);
+
+    // Adjusted to access 'team1.name' and 'team2.name' properly
     const match = new Match({
         date,
         time,
         winner,
-        team1: { name: team1.name },
-        team2: { name: team2.name },
+        team1: { name: req.body['team1.name'] },
+        team2: { name: req.body['team2.name'] },
     });
+
+    console.log(match, "matchData is here ");
 
     try {
         if (req.files) {
@@ -48,6 +52,7 @@ export const addMatch = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
 
 // Edit a match by ID
 export const editMatch = async (req, res) => {
