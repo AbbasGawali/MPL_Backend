@@ -10,11 +10,12 @@ import cors from "cors"
 const port = process.env.PORT || 7000;
 const app = express();
 
-app.use(cors({
-    origin: ['http://localhost:5173', "https://mpl-cricket.netlify.app/"],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    credentials: true,
-}));
+// app.use(cors({
+//     origin: ['http://localhost:5173', "https://mpl-cricket.netlify.app/"],
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+//     credentials: true,
+// }));
+app.use(cors());
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
