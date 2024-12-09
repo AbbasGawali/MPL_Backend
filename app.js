@@ -6,17 +6,28 @@ import UserRoutes from "./routes/UserRoutes.js"
 import MatchRoutes from "./routes/MatchRoutes.js"
 import UpdatesRoutes from "./routes/UpdatesRoutes.js"
 import cors from "cors"
+import User from "./models/User.js"; // Import the User model
 
-const port = process.env.PORT || 7000;
+import { Server } from "socket.io";
+import http from "http";
+
+const port = process.env.PORT || 8000;
+// Initialize express and HTTP server
 const app = express();
+const server = http.createServer(app);
 
-// app.use(cors({
-//     origin: ['http://localhost:5173', "https://mpl-cricket.netlify.app/"],
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-//     credentials: true,
-// }));
+// Set up socket.io
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Adjust this for production, e.g., specific frontend URLs
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true,
+    },
+});
+
+
+// Middleware
 app.use(cors());
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,9 +40,91 @@ app.get("/", (req, res) => {
     res.send("Welcome to MPL Backend");
 })
 
-app.listen(port, () => {
-    console.log(`listening at port ${port}`)
-})
+
+// Socket.io Events
+let usersData = []; // You can fetch this from the database on initialization
+
+
+
+
+// io.on("connection", (socket) => {
+//     console.log("A user connected");
+
+//     // Handle user selection
+//     socket.on("selectUser", async (selectedUserId) => {
+//         try {
+//             // Fetch the selected user from the database
+//             const selectedUser = await User.findById(selectedUserId);
+//             if (selectedUser) {
+//                 io.emit("userSelected", selectedUser); // Broadcast to all clients
+//             } else {
+//                 console.error("User not found");
+//             }
+//         } catch (error) {
+//             console.error("Error fetching user:", error);
+//         }
+//     });
+
+//     // Handle price updates
+//     socket.on("updatePrice", async (updatedUser) => {
+//         try {
+//             // Update the user data in the database
+//             const updatedUserData = await User.findByIdAndUpdate(
+//                 updatedUser.id,
+//                 { $set: { position: updatedUser.position } }, // Example: Update position
+//                 { new: true }
+//             );
+
+//             if (updatedUserData) {
+//                 io.emit("priceUpdated", updatedUserData); // Broadcast the updated user
+//             } else {
+//                 console.error("User not found for update");
+//             }
+//         } catch (error) {
+//             console.error("Error updating user:", error);
+//         }
+//     });
+
+//     socket.on("disconnect", () => {
+//         console.log("A user disconnected");
+//     });
+// });
+
+
+
+
+
+// Socket.IO events
+io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+  
+    // Handle player selection
+    socket.on('selectPlayer', (player) => {
+      io.emit('playerSelected', player);
+    });
+  
+    // Handle bid update
+    socket.on('updateBid', (data) => {
+      io.emit('bidUpdated', data);
+    });
+  
+    // Handle final bid
+    socket.on('finalizeBid', (data) => {
+      io.emit('bidFinalized', data);
+    });
+  
+    socket.on('disconnect', () => {
+      console.log('A user disconnected:', socket.id);
+    });
+  });
+  
+
+
+
+// Start the server
+server.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});
 
 
 
