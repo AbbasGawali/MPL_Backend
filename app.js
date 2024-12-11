@@ -18,11 +18,11 @@ const server = http.createServer(app);
 
 // Set up socket.io
 const io = new Server(server, {
-    cors: {
-        origin: "*", // Adjust this for production, e.g., specific frontend URLs
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        credentials: true,
-    },
+  cors: {
+    origin: "*", // Adjust this for production, e.g., specific frontend URLs
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  },
 });
 
 
@@ -34,10 +34,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", UserRoutes)
 app.use('/api/updates', UpdatesRoutes); // Prefix all update routes with /updates
 app.use('/api/match', MatchRoutes); // Prefix all update routes with /updates
-
+app.use('/api/finalisedbiddings', finalisedBiddingRoutes);
 
 app.get("/", (req, res) => {
-    res.send("Welcome to MPL Backend");
+  res.send("Welcome to MPL Backend");
 })
 
 
@@ -96,34 +96,34 @@ let usersData = []; // You can fetch this from the database on initialization
 
 // Socket.IO events
 io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
-  
-    // Handle player selection
-    socket.on('selectPlayer', (player) => {
-      io.emit('playerSelected', player);
-    });
-  
-    // Handle bid update
-    socket.on('updateBid', (data) => {
-      io.emit('bidUpdated', data);
-    });
-  
-    // Handle final bid
-    socket.on('finalizeBid', (data) => {
-      io.emit('bidFinalized', data);
-    });
-  
-    socket.on('disconnect', () => {
-      console.log('A user disconnected:', socket.id);
-    });
+  console.log('A user connected:', socket.id);
+
+  // Handle player selection
+  socket.on('selectPlayer', (player) => {
+    io.emit('playerSelected', player);
   });
-  
+
+  // Handle bid update
+  socket.on('updateBid', (data) => {
+    io.emit('bidUpdated', data);
+  });
+
+  // Handle final bid
+  socket.on('finalizeBid', (data) => {
+    io.emit('bidFinalized', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected:', socket.id);
+  });
+});
+
 
 
 
 // Start the server
 server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on http://localhost:${port}`);
 });
 
 
