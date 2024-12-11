@@ -9,15 +9,46 @@ export const getFinalisedBiddings = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+ 
+// Utility function for validations
+const validateBiddingData = (data) => {
+    const errors = [];
+
+    if (!data.name || typeof data.name !== 'string' || data.name.trim().length === 0) {
+        errors.push('Player name is required and must be a valid string.');
+    }
+    if (!data.position || typeof data.position !== 'string' || data.position.trim().length === 0) {
+        errors.push('Player position is required and must be a valid string.');
+    }
+    if (!Number.isInteger(data.currentBid) || data.currentBid <= 0) {
+        errors.push('Current bid must be a positive integer.');
+    }
+    if (!data.lastBiddingTeam || typeof data.lastBiddingTeam !== 'string' || data.lastBiddingTeam.trim().length === 0) {
+        errors.push('Last bidding team is required and must be a valid string.');
+    }
+    if (!Number.isInteger(data.age) || data.age <= 0 || data.age > 100) {
+        errors.push('Player age must be a positive integer between 1 and 100.');
+    }
+
+    return errors;
+};
 
 // Add a new finalized bidding
 export const addFinalisedBidding = async (req, res) => {
+    const { name, position, currentBid, lastBiddingTeam, age } = req.body;
+
+    // Validate data
+    const validationErrors = validateBiddingData({ name, position, currentBid, lastBiddingTeam, age });
+    if (validationErrors.length > 0) {
+        return res.status(400).json({ message: 'Validation failed', errors: validationErrors });
+    }
+
     const finalisedBidding = new FinalisedBidding(req.body);
     try {
         const savedBidding = await finalisedBidding.save();
         res.status(201).json({ message: 'Bidding added successfully', bidding: savedBidding });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 

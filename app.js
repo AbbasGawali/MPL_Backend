@@ -5,6 +5,7 @@ import "./config/db.js"
 import UserRoutes from "./routes/UserRoutes.js"
 import MatchRoutes from "./routes/MatchRoutes.js"
 import UpdatesRoutes from "./routes/UpdatesRoutes.js"
+import finalisedBiddingRoutes from "./routes/finalisedBiddingRoutes.js"
 import cors from "cors"
 import User from "./models/User.js"; // Import the User model
 

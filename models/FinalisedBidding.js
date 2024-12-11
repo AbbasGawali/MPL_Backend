@@ -12,6 +12,9 @@ const FinalisedBiddingSchema = new mongoose.Schema({
     }, lastBiddingTeam: {
         required: true,
         type: String,
+    }, age: {
+        required: true,
+        type: number,
     }
 }, { timestamps: true });
 
